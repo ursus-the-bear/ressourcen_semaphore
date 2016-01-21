@@ -70,4 +70,19 @@ void redOnForTwoSeconds () {
 	P1OUT &= ~GREEN_LED;	// Green off
 	P1OUT &= ~RED_LED;		// Red off
 
+	// you no longer need the semaphore
+	led_semaphore--;
+
+	__disable_interrupt();
+	if (led_semaphore > 0) {
+		// set the next BLOCKED thread to WAITING
+		for (i = 0; i < MAX_THREADS; i++) {
+			if ((threadList [i].state == BLOCKED) & (threadList [i].funcPtr == &redOnForTwoSeconds)) {
+				threadList [i].state = WAITING;
+				break;
+			}
+		}
+	}
+	__enable_interrupt();
+
 }

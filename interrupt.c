@@ -78,15 +78,16 @@ __interrupt void process_button_press (void) {
 
 	// tell the scheduler to add another red function
 	add_red_function++;
-	LED_
 
 	// toggle high / low transition
-	BUTTON_IES ^= BUTTON;
+//	BUTTON_IES ^= BUTTON;
 
 	// remove interrrupt flag so you can process the next one
 	BUTTON_IFG &= ~BUTTON;
 
 	// fin
 	atomic_end();
+
+
 
 }

@@ -39,7 +39,7 @@ extern int add_red_function;
 void atomic_start ();
 void atomic_end ();
 
-int scheduler_startThread (void (*funcPtr)());
+int scheduler_startThread (void (*funcPtr)(), states_t state);
 void scheduler_runNextThread ();
 void scheduler_killThread (int threadNo);
 

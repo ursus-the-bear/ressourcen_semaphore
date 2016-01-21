@@ -18,10 +18,6 @@ int main (void) {
 		threadList [i].state = FREE;
 	currThread = -1;
 
-	// thread 0 is allways blink green - runs when everything else has finished
-	int threadID;
-	threadID = scheduler_startThread (&blinkGreen, WAITING);
-
 	// ok, now enable the interrupts for everything to just magically start
 	__enable_interrupt();
 
@@ -29,6 +25,7 @@ int main (void) {
 	while (1==1) {
 
 		// currently do nothing
-		// just loafing aroung
+		// just loafing around
+
 	}
 }

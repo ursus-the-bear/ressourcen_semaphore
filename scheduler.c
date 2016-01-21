@@ -118,8 +118,13 @@ void scheduler_runNextThread() {
 
 	// do I need to add any red functions
 	if (add_red_function > 0)
-		for (; add_red_function > 0; add_red_function--)
-			scheduler_startThread(&redOnForTwoSeconds, WAITING);
+		for (; add_red_function > 0; add_red_function--) {
+			if (0 == led_semaphore)
+				scheduler_startThread(&redOnForTwoSeconds, WAITING);
+			else
+				scheduler_startThread(&redOnForTwoSeconds, BLOCKED);
+			led_semaphore++;
+		}
 
 	// do not process interrupts when I am busy
 	atomic_start ();
