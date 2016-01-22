@@ -18,6 +18,9 @@ int main (void) {
 		threadList [i].state = FREE;
 	currThread = -1;
 
+	//
+	i = scheduler_startThread(&blinkGreen, WAITING);
+
 	// ok, now enable the interrupts for everything to just magically start
 	__enable_interrupt();
 

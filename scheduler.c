@@ -15,17 +15,20 @@ int add_red_function = 0;
 unsigned int interrupts_disabled_count = 0;
 //
 void atomic_start () {
-//	if (0 == interrupts_disabled_count) {
-		__disable_interrupt();
-//	}
+	if (0 == interrupts_disabled_count) {
+}		__disable_interrupt();
+//	};
+
 	interrupts_disabled_count++;
 }
 //
 void atomic_end () {
-//	if (1 == interrupts_disabled_count) {
-		__enable_interrupt();
-//	} else
+
 	interrupts_disabled_count--;
+
+	if (0 == interrupts_disabled_count) {
+		__enable_interrupt();
+	};
 }
 // where is your next free slot
 int scheduler_getFreeThread () {
@@ -45,7 +48,7 @@ int scheduler_getFreeThread () {
 	}
 
 	// ok, what is it that you wanted
-	// atomic_end ();    ==> ????
+	atomic_end ();
 
 	// and return the first space you found
 	return RC;
@@ -59,7 +62,10 @@ int scheduler_startThread (void (*funcPtr)(), states_t state) {
 
 	// get the next thread
 	int threadID = scheduler_getFreeThread ();
-	if (threadID == NO_THREAD) return threadID;
+	if (threadID == NO_THREAD) {
+		atomic_end();
+		return threadID;
+}
 
 	// setup your thread array
 	threadList[threadID].funcPtr = funcPtr;
@@ -100,7 +106,7 @@ int scheduler_getNextThreadToRun () {
 		if (threadList [arrayPos].state == WAITING) {
 			RC = arrayPos;
 			i = MAX_THREADS;  // now you get the next free thread, give it back and start working!
-			// atomic_end ();
+			atomic_end ();
 
 			// and return the first space you found
 			return RC;
@@ -116,18 +122,11 @@ int scheduler_getNextThreadToRun () {
 // select the next thread to run and run it
 void scheduler_runNextThread() {
 
-	// do I need to add any red functions
-	if (add_red_function > 0)
-		for (; add_red_function > 0; add_red_function--) {
-			if (0 == led_semaphore)
-				scheduler_startThread(&redOnForTwoSeconds, WAITING);
-			else
-				scheduler_startThread(&redOnForTwoSeconds, BLOCKED);
-			led_semaphore++;
-		}
-
 	// do not process interrupts when I am busy
 	atomic_start ();
+
+	if ((led_semaphore = 0) && (threadList [0].state == BLOCKED))
+		threadList [0].state == WAITING;
 
 	// which thread do we need to run now
 	int threadID = scheduler_getNextThreadToRun();
@@ -143,13 +142,18 @@ void scheduler_runNextThread() {
 		if(currThread == -1){
 			currThread = threadID;
 			threadList[currThread].state = RUNNING;
+			atomic_end();
 			longjmp(threadList[currThread].context, 1);
 		}else{
 			if (setjmp(threadList[currThread].context) == 0) {
 				if (threadList[currThread].state == RUNNING)
-					threadList[currThread].state = WAITING;
+					if ((led_semaphore > 0) && (currThread == 0))
+						threadList[0].state = BLOCKED;
+					else
+						threadList[currThread].state = WAITING;
 				currThread = threadID;
 				threadList[currThread].state = RUNNING;
+				atomic_end();
 				longjmp(threadList[currThread].context, 1);
 			}
 		}

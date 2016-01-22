@@ -76,14 +76,16 @@ __interrupt void process_button_press (void) {
 	// don't want to get interrupted
 	atomic_start ();
 
-	// tell the scheduler to add another red function
-	add_red_function++;
-
-	// toggle high / low transition
-//	BUTTON_IES ^= BUTTON;
-
 	// remove interrrupt flag so you can process the next one
 	BUTTON_IFG &= ~BUTTON;
+
+	if (0 == led_semaphore)
+		scheduler_startThread(&redOnForTwoSeconds, WAITING);
+	else
+		scheduler_startThread(&redOnForTwoSeconds, BLOCKED);
+	led_semaphore++;
+
+
 
 	// fin
 	atomic_end();
