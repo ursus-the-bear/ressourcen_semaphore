@@ -80,16 +80,12 @@ __interrupt void process_button_press (void) {
 	BUTTON_IFG &= ~BUTTON;
 
 	if (0 == led_semaphore)
-		scheduler_startThread(&redOnForTwoSeconds, WAITING);
+		scheduler_startThread (&redOnForTwoSeconds, WAITING);
 	else
-		scheduler_startThread(&redOnForTwoSeconds, BLOCKED);
+		scheduler_startThread (&redOnForTwoSeconds, BLOCKED);
 	led_semaphore++;
-
-
 
 	// fin
 	atomic_end();
-
-
 
 }

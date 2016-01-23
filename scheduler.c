@@ -125,7 +125,7 @@ void scheduler_runNextThread() {
 	// do not process interrupts when I am busy
 	atomic_start ();
 
-	if ((led_semaphore = 0) && (threadList [0].state == BLOCKED))
+	if ((led_semaphore == 0) && (threadList [0].state == BLOCKED))
 		threadList [0].state == WAITING;
 
 	// which thread do we need to run now
@@ -172,5 +172,4 @@ void scheduler_killThread (int threadNo) {
 
 	// ok, what is it that you wanted
 	atomic_end ();
-
 }
