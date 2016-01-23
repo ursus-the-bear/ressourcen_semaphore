@@ -1,7 +1,8 @@
 #include <msp430.h> 
-#include "functions.h"
-#include "scheduler.h"
 #include "interrupt.h"
+#include "scheduler.h"
+#include "semaphore.h"
+#include "functions.h"
 /*
  * main.c
  */
@@ -11,15 +12,8 @@ int main (void) {
 	setupLEDs ();
 	setupTimer ();
 	setupButton ();
-
-	// setup your processList
-	int i;
-	for (i = 0; i < MAX_THREADS; i++)
-		threadList [i].state = FREE;
-	currThread = -1;
-
-	//
-	i = scheduler_startThread(&blinkGreen, WAITING);
+	setupSemaphoreLED(&blinkGreen);
+	setupScheduler ();
 
 	// ok, now enable the interrupts for everything to just magically start
 	__enable_interrupt();
@@ -29,6 +23,7 @@ int main (void) {
 
 		// currently do nothing
 		// just loafing around
+		// don't like this - am hoging the CPU
 
 	}
 }

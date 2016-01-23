@@ -17,7 +17,4 @@ void setupLEDs ();
 void blinkGreen ();
 void redOnForTwoSeconds ();
 
-extern int led_semaphore;
-
-
 #endif /* FUNCTIONS_H_ */

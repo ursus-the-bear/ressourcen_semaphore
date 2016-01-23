@@ -1,10 +1,10 @@
 ******************************************************************************
                   MSP430 Linker PC v4.4.6                      
 ******************************************************************************
->> Linked Fri Jan 22 11:40:08 2016
+>> Linked Sat Jan 23 23:15:44 2016
 
 OUTPUT FILE NAME:   <SEMAPHORE.out>
-ENTRY POINT SYMBOL: "_c_int00_noargs_noexit"  address: 0000c44e
+ENTRY POINT SYMBOL: "_c_int00_noargs_noexit"  address: 0000c52e
 
 
 MEMORY CONFIGURATION
@@ -14,12 +14,12 @@ MEMORY CONFIGURATION
   SFR                   00000000   00000010  00000000  00000010  RWIX
   PERIPHERALS_8BIT      00000010   000000f0  00000000  000000f0  RWIX
   PERIPHERALS_16BIT     00000100   00000100  00000000  00000100  RWIX
-  RAM                   00000200   00000200  00000138  000000c8  RWIX
+  RAM                   00000200   00000200  00000150  000000b0  RWIX
   INFOD                 00001000   00000040  00000000  00000040  RWIX
   INFOC                 00001040   00000040  00000000  00000040  RWIX
   INFOB                 00001080   00000040  00000000  00000040  RWIX
   INFOA                 000010c0   00000040  00000000  00000040  RWIX
-  FLASH                 0000c000   00003fde  00000538  00003aa6  RWIX
+  FLASH                 0000c000   00003fde  00000602  000039dc  RWIX
   BSLSIGNATURE          0000ffde   00000002  00000002  00000000  RWIX  ffff 
   INT00                 0000ffe0   00000002  00000002  00000000  RWIX
   INT01                 0000ffe2   00000002  00000000  00000002  RWIX
@@ -44,64 +44,63 @@ SECTION ALLOCATION MAP
  output                                  attributes/
 section   page    origin      length       input sections
 --------  ----  ----------  ----------   ----------------
-.bss       0    00000200    000000e4     UNINITIALIZED
+.bss       0    00000200    00000100     UNINITIALIZED
                   00000200    000000dc     (.common:threadList)
-                  000002dc    00000002     (.common:callScheduler)
-                  000002de    00000002     (.common:currThread)
-                  000002e0    00000002     (.common:iLEDonCount)
-                  000002e2    00000002     (.common:led_semaphore)
-
-.data      0    000002e4    00000004     UNINITIALIZED
-                  000002e4    00000004     scheduler.obj (.data)
+                  000002dc    00000016     (.common:threadsWaiting)
+                  000002f2    00000002     (.common:backgroundFunction)
+                  000002f4    00000002     (.common:callScheduler)
+                  000002f6    00000002     (.common:currThread)
+                  000002f8    00000002     (.common:greenStarted)
+                  000002fa    00000002     (.common:iLEDonCount)
+                  000002fc    00000002     (.common:interrupts_disabled_count)
+                  000002fe    00000002     (.common:semaphoreLED)
 
 .stack     0    000003b0    00000050     UNINITIALIZED
                   000003b0    00000002     rts430_eabi.lib : boot.obj (.stack)
                   000003b2    0000004e     --HOLE--
 
-.text      0    0000c000    0000051e     
-                  0000c000    000000d8     scheduler.obj (.text:scheduler_runNextThread)
-                  0000c0d8    00000076     scheduler.obj (.text:scheduler_startThread)
-                  0000c14e    00000064     rts430_eabi.lib : copy_decompress_rle.obj (.text:__TI_decompress_rle_core)
-                  0000c1b2    00000058                     : autoinit.obj (.text:_auto_init)
-                  0000c20a    00000058                     : setjmp.obj (.text)
-                  0000c262    00000052     scheduler.obj (.text:scheduler_getNextThreadToRun)
-                  0000c2b4    00000042     interrupt.obj (.text:process_button_press)
-                  0000c2f6    00000040     functions.obj (.text:blinkGreen)
-                  0000c336    0000003e     main.obj (.text:main)
-                  0000c374    00000034     scheduler.obj (.text:scheduler_getFreeThread)
-                  0000c3a8    0000002e     functions.obj (.text:redOnForTwoSeconds)
-                  0000c3d6    0000002e     interrupt.obj (.text:setupTimer)
-                  0000c404    0000002e     interrupt.obj (.text:timer)
-                  0000c432    0000001c     functions.obj (.text:setupLEDs)
-                  0000c44e    0000001a     rts430_eabi.lib : boot_special.obj (.text:_c_int00_noargs_noexit)
-                  0000c468    0000001a     interrupt.obj (.text:setupButton)
-                  0000c482    00000018     scheduler.obj (.text:scheduler_killThread)
-                  0000c49a    00000014     rts430_eabi.lib : copy_zero_init.obj (.text:decompress:ZI:__TI_zero_init)
-                  0000c4ae    00000014                     : mult16.obj (.text)
-                  0000c4c2    00000012                     : copy_decompress_none.obj (.text:decompress:none:__TI_decompress_none)
-                  0000c4d4    00000012                     : memcpy.obj (.text:memcpy)
-                  0000c4e6    00000010                     : epilog.obj (.text)
-                  0000c4f6    0000000a     scheduler.obj (.text:atomic_end)
-                  0000c500    0000000a     scheduler.obj (.text:atomic_start)
-                  0000c50a    00000006     rts430_eabi.lib : isr_trap.obj (.text:_isr:__TI_ISR_TRAP)
-                  0000c510    00000006                     : copy_decompress_rle.obj (.text:decompress:rle24:__TI_decompress_rle24)
-                  0000c516    00000004                     : pre_init.obj (.text:_system_pre_init)
-                  0000c51a    00000004                     : exit.obj (.text:abort)
+.text      0    0000c000    000005f8     
+                  0000c000    000000ea     scheduler.obj (.text:schedulerRunNextThread)
+                  0000c0ea    0000008e     semaphore.obj (.text:semaphoreLED_P)
+                  0000c178    0000006c     scheduler.obj (.text:schedulerStartThread)
+                  0000c1e4    0000006c     semaphore.obj (.text:semaphoreLED_V)
+                  0000c250    0000005a     scheduler.obj (.text:schedulerGetNextThreadToRun)
+                  0000c2aa    00000058     rts430_eabi.lib : autoinit.obj (.text:_auto_init)
+                  0000c302    00000058                     : setjmp.obj (.text)
+                  0000c35a    00000044     functions.obj (.text:blinkGreen)
+                  0000c39e    0000003e     interrupt.obj (.text:process_button_press)
+                  0000c3dc    00000036     scheduler.obj (.text:schedulerGetFreeThread)
+                  0000c412    00000032     functions.obj (.text:redOnForTwoSeconds)
+                  0000c444    00000032     interrupt.obj (.text:setupTimer)
+                  0000c476    0000002e     interrupt.obj (.text:timer)
+                  0000c4a4    0000002c     scheduler.obj (.text:setupScheduler)
+                  0000c4d0    00000024     semaphore.obj (.text:setupSemaphoreLED)
+                  0000c4f4    0000001e     scheduler.obj (.text:schedulerSetThreadStatus)
+                  0000c512    0000001c     main.obj (.text:main)
+                  0000c52e    0000001a     rts430_eabi.lib : boot_special.obj (.text:_c_int00_noargs_noexit)
+                  0000c548    0000001a     interrupt.obj (.text:setupButton)
+                  0000c562    00000018     scheduler.obj (.text:schedulerKillThread)
+                  0000c57a    00000018     functions.obj (.text:setupLEDs)
+                  0000c592    00000014     rts430_eabi.lib : copy_zero_init.obj (.text:decompress:ZI:__TI_zero_init)
+                  0000c5a6    00000014                     : mult16.obj (.text)
+                  0000c5ba    00000010     scheduler.obj (.text:atomic_start)
+                  0000c5ca    00000010     rts430_eabi.lib : epilog.obj (.text)
+                  0000c5da    0000000a     scheduler.obj (.text:atomic_end)
+                  0000c5e4    00000006     rts430_eabi.lib : isr_trap.obj (.text:_isr:__TI_ISR_TRAP)
+                  0000c5ea    00000006     scheduler.obj (.text:schedulerGetCurrThread)
+                  0000c5f0    00000004     rts430_eabi.lib : pre_init.obj (.text:_system_pre_init)
+                  0000c5f4    00000004                     : exit.obj (.text:abort)
 
-.cinit     0    0000c51e    0000001a     
-                  0000c51e    00000008     (.cinit..data.load) [load image]
-                  0000c526    00000006     (__TI_handler_table)
-                  0000c52c    00000004     (.cinit..bss.load) [load image, compression = zero_init]
-                  0000c530    00000008     (__TI_cinit_table)
+.cinit     0    0000c5f8    0000000a     
+                  0000c5f8    00000004     (.cinit..bss.load) [load image, compression = zero_init]
+                  0000c5fc    00000002     (__TI_handler_table)
+                  0000c5fe    00000004     (__TI_cinit_table)
 
 .init_array 
 *          0    0000c000    00000000     UNINITIALIZED
 
 TRAPINT    0    0000ffe0    00000002     
                   0000ffe0    00000002     rts430_eabi.lib : int00.obj (.int00)
-
-.TI.persistent 
-*          0    000002e4    00000000     UNINITIALIZED
 
 $fill000   0    0000ffde    00000002     
                   0000ffde    00000002     --HOLE-- [fill = ffff]
@@ -155,364 +154,365 @@ NMI        0    0000fffc    00000002
 
 LINKER GENERATED COPY TABLES
 
-__TI_cinit_table @ 0000c530 records: 2, size/record: 4, table size: 8
-	.data: load addr=0000c51e, load size=00000008 bytes, run addr=000002e4, run size=00000004 bytes, compression=copy
-	.bss: load addr=0000c52c, load size=00000004 bytes, run addr=00000200, run size=000000e4 bytes, compression=zero_init
+__TI_cinit_table @ 0000c5fe records: 1, size/record: 4, table size: 4
+	.bss: load addr=0000c5f8, load size=00000004 bytes, run addr=00000200, run size=00000100 bytes, compression=zero_init
 
 
 LINKER GENERATED HANDLER TABLE
 
-__TI_handler_table @ 0000c526 records: 3, size/record: 2, table size: 6
+__TI_handler_table @ 0000c5fc records: 1, size/record: 2, table size: 2
 	index: 0, handler: __TI_zero_init
-	index: 1, handler: __TI_decompress_rle24
-	index: 2, handler: __TI_decompress_none
 
 
 GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name 
 
-address   name                        
--------   ----                        
-0000004a  ADC10AE0                    
-000001b0  ADC10CTL0                   
-000001b2  ADC10CTL1                   
-00000048  ADC10DTC0                   
-00000049  ADC10DTC1                   
-000001b4  ADC10MEM                    
-000001bc  ADC10SA                     
-00000057  BCSCTL1                     
-00000058  BCSCTL2                     
-00000053  BCSCTL3                     
-0000c51a  C$$EXIT                     
-00000059  CACTL1                      
-0000005a  CACTL2                      
-000010fb  CALBC1_12MHZ                
-000010f9  CALBC1_16MHZ                
-000010ff  CALBC1_1MHZ                 
-000010fd  CALBC1_8MHZ                 
-000010fa  CALDCO_12MHZ                
-000010f8  CALDCO_16MHZ                
-000010fe  CALDCO_1MHZ                 
-000010fc  CALDCO_8MHZ                 
-0000005b  CAPD                        
-00000056  DCOCTL                      
-00000128  FCTL1                       
-0000012a  FCTL2                       
-0000012c  FCTL3                       
-00000000  IE1                         
-00000001  IE2                         
-00000002  IFG1                        
-00000003  IFG2                        
-00000022  P1DIR                       
-00000025  P1IE                        
-00000024  P1IES                       
-00000023  P1IFG                       
-00000020  P1IN                        
-00000021  P1OUT                       
-00000027  P1REN                       
-00000026  P1SEL                       
-00000041  P1SEL2                      
-0000002a  P2DIR                       
-0000002d  P2IE                        
-0000002c  P2IES                       
-0000002b  P2IFG                       
-00000028  P2IN                        
-00000029  P2OUT                       
-0000002f  P2REN                       
-0000002e  P2SEL                       
-00000042  P2SEL2                      
-0000001a  P3DIR                       
-00000018  P3IN                        
-00000019  P3OUT                       
-00000010  P3REN                       
-0000001b  P3SEL                       
-00000043  P3SEL2                      
-00000172  TA0CCR0                     
-00000174  TA0CCR1                     
-00000176  TA0CCR2                     
-00000162  TA0CCTL0                    
-00000164  TA0CCTL1                    
-00000166  TA0CCTL2                    
-00000160  TA0CTL                      
-0000012e  TA0IV                       
-00000170  TA0R                        
-00000192  TA1CCR0                     
-00000194  TA1CCR1                     
-00000196  TA1CCR2                     
-00000182  TA1CCTL0                    
-00000184  TA1CCTL1                    
-00000186  TA1CCTL2                    
-00000180  TA1CTL                      
-0000011e  TA1IV                       
-00000190  TA1R                        
-000010db  TLV_ADC10_1_LEN             
-000010da  TLV_ADC10_1_TAG             
-000010c0  TLV_CHECKSUM                
-000010f7  TLV_DCO_30_LEN              
-000010f6  TLV_DCO_30_TAG              
-0000005d  UCA0ABCTL                   
-00000062  UCA0BR0                     
-00000063  UCA0BR1                     
-00000060  UCA0CTL0                    
-00000061  UCA0CTL1                    
-0000005f  UCA0IRRCTL                  
-0000005e  UCA0IRTCTL                  
-00000064  UCA0MCTL                    
-00000066  UCA0RXBUF                   
-00000065  UCA0STAT                    
-00000067  UCA0TXBUF                   
-0000006a  UCB0BR0                     
-0000006b  UCB0BR1                     
-00000068  UCB0CTL0                    
-00000069  UCB0CTL1                    
-0000006c  UCB0I2CIE                   
-00000118  UCB0I2COA                   
-0000011a  UCB0I2CSA                   
-0000006e  UCB0RXBUF                   
-0000006d  UCB0STAT                    
-0000006f  UCB0TXBUF                   
-00000120  WDTCTL                      
-00000400  __STACK_END                 
-00000050  __STACK_SIZE                
-0000c530  __TI_CINIT_Base             
-0000c538  __TI_CINIT_Limit            
-0000c526  __TI_Handler_Table_Base     
-0000c52c  __TI_Handler_Table_Limit    
-UNDEFED   __TI_INITARRAY_Base         
-UNDEFED   __TI_INITARRAY_Limit        
-0000c50a  __TI_ISR_TRAP               
-0000c4c2  __TI_decompress_none        
-0000c510  __TI_decompress_rle24       
-0000ffe0  __TI_int00                  
-0000ffe4  __TI_int02                  
-0000ffe6  __TI_int03                  
-0000ffea  __TI_int05                  
-0000ffec  __TI_int06                  
-0000ffee  __TI_int07                  
-0000fff0  __TI_int08                  
-0000fff2  __TI_int09                  
-0000fff4  __TI_int10                  
-0000fff6  __TI_int11                  
-0000fff8  __TI_int12                  
-0000fffa  __TI_int13                  
-0000fffc  __TI_int14                  
-0000c49a  __TI_zero_init              
-ffffffff  __binit__                   
-ffffffff  __c_args__                  
-0000c4f2  __mspabi_func_epilog_1      
-0000c4f0  __mspabi_func_epilog_2      
-0000c4ee  __mspabi_func_epilog_3      
-0000c4ec  __mspabi_func_epilog_4      
-0000c4ea  __mspabi_func_epilog_5      
-0000c4e8  __mspabi_func_epilog_6      
-0000c4e6  __mspabi_func_epilog_7      
-0000c4ae  __mspabi_mpyi               
-0000c4ae  __mspabi_mpyi_sw            
-0000c1b2  _auto_init                  
-0000c44e  _c_int00_noargs_noexit      
-0000fffe  _reset_vector               
-0000c20a  _setjmp                     
-000003b0  _stack                      
-0000c516  _system_pre_init            
-0000c51a  abort                       
-000002e4  add_red_function            
-0000c4f6  atomic_end                  
-0000c500  atomic_start                
-ffffffff  binit                       
-0000c2f6  blinkGreen                  
-000002dc  callScheduler               
-000002de  currThread                  
-000002e0  iLEDonCount                 
-000002e6  interrupts_disabled_count   
-000002e2  led_semaphore               
-0000c236  longjmp                     
-0000c336  main                        
-0000c4d4  memcpy                      
-0000c2b4  process_button_press        
-0000c3a8  redOnForTwoSeconds          
-0000c374  scheduler_getFreeThread     
-0000c262  scheduler_getNextThreadToRun
-0000c482  scheduler_killThread        
-0000c000  scheduler_runNextThread     
-0000c0d8  scheduler_startThread       
-0000c20a  setjmp                      
-0000c468  setupButton                 
-0000c432  setupLEDs                   
-0000c3d6  setupTimer                  
-00000200  threadList                  
-0000c404  timer                       
+address   name                       
+-------   ----                       
+0000004a  ADC10AE0                   
+000001b0  ADC10CTL0                  
+000001b2  ADC10CTL1                  
+00000048  ADC10DTC0                  
+00000049  ADC10DTC1                  
+000001b4  ADC10MEM                   
+000001bc  ADC10SA                    
+00000057  BCSCTL1                    
+00000058  BCSCTL2                    
+00000053  BCSCTL3                    
+0000c5f4  C$$EXIT                    
+00000059  CACTL1                     
+0000005a  CACTL2                     
+000010fb  CALBC1_12MHZ               
+000010f9  CALBC1_16MHZ               
+000010ff  CALBC1_1MHZ                
+000010fd  CALBC1_8MHZ                
+000010fa  CALDCO_12MHZ               
+000010f8  CALDCO_16MHZ               
+000010fe  CALDCO_1MHZ                
+000010fc  CALDCO_8MHZ                
+0000005b  CAPD                       
+00000056  DCOCTL                     
+00000128  FCTL1                      
+0000012a  FCTL2                      
+0000012c  FCTL3                      
+00000000  IE1                        
+00000001  IE2                        
+00000002  IFG1                       
+00000003  IFG2                       
+00000022  P1DIR                      
+00000025  P1IE                       
+00000024  P1IES                      
+00000023  P1IFG                      
+00000020  P1IN                       
+00000021  P1OUT                      
+00000027  P1REN                      
+00000026  P1SEL                      
+00000041  P1SEL2                     
+0000002a  P2DIR                      
+0000002d  P2IE                       
+0000002c  P2IES                      
+0000002b  P2IFG                      
+00000028  P2IN                       
+00000029  P2OUT                      
+0000002f  P2REN                      
+0000002e  P2SEL                      
+00000042  P2SEL2                     
+0000001a  P3DIR                      
+00000018  P3IN                       
+00000019  P3OUT                      
+00000010  P3REN                      
+0000001b  P3SEL                      
+00000043  P3SEL2                     
+00000172  TA0CCR0                    
+00000174  TA0CCR1                    
+00000176  TA0CCR2                    
+00000162  TA0CCTL0                   
+00000164  TA0CCTL1                   
+00000166  TA0CCTL2                   
+00000160  TA0CTL                     
+0000012e  TA0IV                      
+00000170  TA0R                       
+00000192  TA1CCR0                    
+00000194  TA1CCR1                    
+00000196  TA1CCR2                    
+00000182  TA1CCTL0                   
+00000184  TA1CCTL1                   
+00000186  TA1CCTL2                   
+00000180  TA1CTL                     
+0000011e  TA1IV                      
+00000190  TA1R                       
+000010db  TLV_ADC10_1_LEN            
+000010da  TLV_ADC10_1_TAG            
+000010c0  TLV_CHECKSUM               
+000010f7  TLV_DCO_30_LEN             
+000010f6  TLV_DCO_30_TAG             
+0000005d  UCA0ABCTL                  
+00000062  UCA0BR0                    
+00000063  UCA0BR1                    
+00000060  UCA0CTL0                   
+00000061  UCA0CTL1                   
+0000005f  UCA0IRRCTL                 
+0000005e  UCA0IRTCTL                 
+00000064  UCA0MCTL                   
+00000066  UCA0RXBUF                  
+00000065  UCA0STAT                   
+00000067  UCA0TXBUF                  
+0000006a  UCB0BR0                    
+0000006b  UCB0BR1                    
+00000068  UCB0CTL0                   
+00000069  UCB0CTL1                   
+0000006c  UCB0I2CIE                  
+00000118  UCB0I2COA                  
+0000011a  UCB0I2CSA                  
+0000006e  UCB0RXBUF                  
+0000006d  UCB0STAT                   
+0000006f  UCB0TXBUF                  
+00000120  WDTCTL                     
+00000400  __STACK_END                
+00000050  __STACK_SIZE               
+0000c5fe  __TI_CINIT_Base            
+0000c602  __TI_CINIT_Limit           
+0000c5fc  __TI_Handler_Table_Base    
+0000c5fe  __TI_Handler_Table_Limit   
+UNDEFED   __TI_INITARRAY_Base        
+UNDEFED   __TI_INITARRAY_Limit       
+0000c5e4  __TI_ISR_TRAP              
+0000ffe0  __TI_int00                 
+0000ffe4  __TI_int02                 
+0000ffe6  __TI_int03                 
+0000ffea  __TI_int05                 
+0000ffec  __TI_int06                 
+0000ffee  __TI_int07                 
+0000fff0  __TI_int08                 
+0000fff2  __TI_int09                 
+0000fff4  __TI_int10                 
+0000fff6  __TI_int11                 
+0000fff8  __TI_int12                 
+0000fffa  __TI_int13                 
+0000fffc  __TI_int14                 
+0000c592  __TI_zero_init             
+ffffffff  __binit__                  
+ffffffff  __c_args__                 
+0000c5d6  __mspabi_func_epilog_1     
+0000c5d4  __mspabi_func_epilog_2     
+0000c5d2  __mspabi_func_epilog_3     
+0000c5d0  __mspabi_func_epilog_4     
+0000c5ce  __mspabi_func_epilog_5     
+0000c5cc  __mspabi_func_epilog_6     
+0000c5ca  __mspabi_func_epilog_7     
+0000c5a6  __mspabi_mpyi              
+0000c5a6  __mspabi_mpyi_sw           
+0000c2aa  _auto_init                 
+0000c52e  _c_int00_noargs_noexit     
+0000fffe  _reset_vector              
+0000c302  _setjmp                    
+000003b0  _stack                     
+0000c5f0  _system_pre_init           
+0000c5f4  abort                      
+0000c5da  atomic_end                 
+0000c5ba  atomic_start               
+ffffffff  binit                      
+0000c35a  blinkGreen                 
+000002f4  callScheduler              
+000002f6  currThread                 
+000002f8  greenStarted               
+000002fa  iLEDonCount                
+000002fc  interrupts_disabled_count  
+0000c32e  longjmp                    
+0000c512  main                       
+0000c39e  process_button_press       
+0000c412  redOnForTwoSeconds         
+0000c5ea  schedulerGetCurrThread     
+0000c3dc  schedulerGetFreeThread     
+0000c250  schedulerGetNextThreadToRun
+0000c562  schedulerKillThread        
+0000c000  schedulerRunNextThread     
+0000c4f4  schedulerSetThreadStatus   
+0000c178  schedulerStartThread       
+0000c0ea  semaphoreLED_P             
+0000c1e4  semaphoreLED_V             
+0000c302  setjmp                     
+0000c548  setupButton                
+0000c57a  setupLEDs                  
+0000c4a4  setupScheduler             
+0000c4d0  setupSemaphoreLED          
+0000c444  setupTimer                 
+00000200  threadList                 
+0000c476  timer                      
 
 
 GLOBAL SYMBOLS: SORTED BY Symbol Address 
 
-address   name                        
--------   ----                        
-00000000  IE1                         
-00000001  IE2                         
-00000002  IFG1                        
-00000003  IFG2                        
-00000010  P3REN                       
-00000018  P3IN                        
-00000019  P3OUT                       
-0000001a  P3DIR                       
-0000001b  P3SEL                       
-00000020  P1IN                        
-00000021  P1OUT                       
-00000022  P1DIR                       
-00000023  P1IFG                       
-00000024  P1IES                       
-00000025  P1IE                        
-00000026  P1SEL                       
-00000027  P1REN                       
-00000028  P2IN                        
-00000029  P2OUT                       
-0000002a  P2DIR                       
-0000002b  P2IFG                       
-0000002c  P2IES                       
-0000002d  P2IE                        
-0000002e  P2SEL                       
-0000002f  P2REN                       
-00000041  P1SEL2                      
-00000042  P2SEL2                      
-00000043  P3SEL2                      
-00000048  ADC10DTC0                   
-00000049  ADC10DTC1                   
-0000004a  ADC10AE0                    
-00000050  __STACK_SIZE                
-00000053  BCSCTL3                     
-00000056  DCOCTL                      
-00000057  BCSCTL1                     
-00000058  BCSCTL2                     
-00000059  CACTL1                      
-0000005a  CACTL2                      
-0000005b  CAPD                        
-0000005d  UCA0ABCTL                   
-0000005e  UCA0IRTCTL                  
-0000005f  UCA0IRRCTL                  
-00000060  UCA0CTL0                    
-00000061  UCA0CTL1                    
-00000062  UCA0BR0                     
-00000063  UCA0BR1                     
-00000064  UCA0MCTL                    
-00000065  UCA0STAT                    
-00000066  UCA0RXBUF                   
-00000067  UCA0TXBUF                   
-00000068  UCB0CTL0                    
-00000069  UCB0CTL1                    
-0000006a  UCB0BR0                     
-0000006b  UCB0BR1                     
-0000006c  UCB0I2CIE                   
-0000006d  UCB0STAT                    
-0000006e  UCB0RXBUF                   
-0000006f  UCB0TXBUF                   
-00000118  UCB0I2COA                   
-0000011a  UCB0I2CSA                   
-0000011e  TA1IV                       
-00000120  WDTCTL                      
-00000128  FCTL1                       
-0000012a  FCTL2                       
-0000012c  FCTL3                       
-0000012e  TA0IV                       
-00000160  TA0CTL                      
-00000162  TA0CCTL0                    
-00000164  TA0CCTL1                    
-00000166  TA0CCTL2                    
-00000170  TA0R                        
-00000172  TA0CCR0                     
-00000174  TA0CCR1                     
-00000176  TA0CCR2                     
-00000180  TA1CTL                      
-00000182  TA1CCTL0                    
-00000184  TA1CCTL1                    
-00000186  TA1CCTL2                    
-00000190  TA1R                        
-00000192  TA1CCR0                     
-00000194  TA1CCR1                     
-00000196  TA1CCR2                     
-000001b0  ADC10CTL0                   
-000001b2  ADC10CTL1                   
-000001b4  ADC10MEM                    
-000001bc  ADC10SA                     
-00000200  threadList                  
-000002dc  callScheduler               
-000002de  currThread                  
-000002e0  iLEDonCount                 
-000002e2  led_semaphore               
-000002e4  add_red_function            
-000002e6  interrupts_disabled_count   
-000003b0  _stack                      
-00000400  __STACK_END                 
-000010c0  TLV_CHECKSUM                
-000010da  TLV_ADC10_1_TAG             
-000010db  TLV_ADC10_1_LEN             
-000010f6  TLV_DCO_30_TAG              
-000010f7  TLV_DCO_30_LEN              
-000010f8  CALDCO_16MHZ                
-000010f9  CALBC1_16MHZ                
-000010fa  CALDCO_12MHZ                
-000010fb  CALBC1_12MHZ                
-000010fc  CALDCO_8MHZ                 
-000010fd  CALBC1_8MHZ                 
-000010fe  CALDCO_1MHZ                 
-000010ff  CALBC1_1MHZ                 
-0000c000  scheduler_runNextThread     
-0000c0d8  scheduler_startThread       
-0000c1b2  _auto_init                  
-0000c20a  _setjmp                     
-0000c20a  setjmp                      
-0000c236  longjmp                     
-0000c262  scheduler_getNextThreadToRun
-0000c2b4  process_button_press        
-0000c2f6  blinkGreen                  
-0000c336  main                        
-0000c374  scheduler_getFreeThread     
-0000c3a8  redOnForTwoSeconds          
-0000c3d6  setupTimer                  
-0000c404  timer                       
-0000c432  setupLEDs                   
-0000c44e  _c_int00_noargs_noexit      
-0000c468  setupButton                 
-0000c482  scheduler_killThread        
-0000c49a  __TI_zero_init              
-0000c4ae  __mspabi_mpyi               
-0000c4ae  __mspabi_mpyi_sw            
-0000c4c2  __TI_decompress_none        
-0000c4d4  memcpy                      
-0000c4e6  __mspabi_func_epilog_7      
-0000c4e8  __mspabi_func_epilog_6      
-0000c4ea  __mspabi_func_epilog_5      
-0000c4ec  __mspabi_func_epilog_4      
-0000c4ee  __mspabi_func_epilog_3      
-0000c4f0  __mspabi_func_epilog_2      
-0000c4f2  __mspabi_func_epilog_1      
-0000c4f6  atomic_end                  
-0000c500  atomic_start                
-0000c50a  __TI_ISR_TRAP               
-0000c510  __TI_decompress_rle24       
-0000c516  _system_pre_init            
-0000c51a  C$$EXIT                     
-0000c51a  abort                       
-0000c526  __TI_Handler_Table_Base     
-0000c52c  __TI_Handler_Table_Limit    
-0000c530  __TI_CINIT_Base             
-0000c538  __TI_CINIT_Limit            
-0000ffe0  __TI_int00                  
-0000ffe4  __TI_int02                  
-0000ffe6  __TI_int03                  
-0000ffea  __TI_int05                  
-0000ffec  __TI_int06                  
-0000ffee  __TI_int07                  
-0000fff0  __TI_int08                  
-0000fff2  __TI_int09                  
-0000fff4  __TI_int10                  
-0000fff6  __TI_int11                  
-0000fff8  __TI_int12                  
-0000fffa  __TI_int13                  
-0000fffc  __TI_int14                  
-0000fffe  _reset_vector               
-ffffffff  __binit__                   
-ffffffff  __c_args__                  
-ffffffff  binit                       
-UNDEFED   __TI_INITARRAY_Base         
-UNDEFED   __TI_INITARRAY_Limit        
+address   name                       
+-------   ----                       
+00000000  IE1                        
+00000001  IE2                        
+00000002  IFG1                       
+00000003  IFG2                       
+00000010  P3REN                      
+00000018  P3IN                       
+00000019  P3OUT                      
+0000001a  P3DIR                      
+0000001b  P3SEL                      
+00000020  P1IN                       
+00000021  P1OUT                      
+00000022  P1DIR                      
+00000023  P1IFG                      
+00000024  P1IES                      
+00000025  P1IE                       
+00000026  P1SEL                      
+00000027  P1REN                      
+00000028  P2IN                       
+00000029  P2OUT                      
+0000002a  P2DIR                      
+0000002b  P2IFG                      
+0000002c  P2IES                      
+0000002d  P2IE                       
+0000002e  P2SEL                      
+0000002f  P2REN                      
+00000041  P1SEL2                     
+00000042  P2SEL2                     
+00000043  P3SEL2                     
+00000048  ADC10DTC0                  
+00000049  ADC10DTC1                  
+0000004a  ADC10AE0                   
+00000050  __STACK_SIZE               
+00000053  BCSCTL3                    
+00000056  DCOCTL                     
+00000057  BCSCTL1                    
+00000058  BCSCTL2                    
+00000059  CACTL1                     
+0000005a  CACTL2                     
+0000005b  CAPD                       
+0000005d  UCA0ABCTL                  
+0000005e  UCA0IRTCTL                 
+0000005f  UCA0IRRCTL                 
+00000060  UCA0CTL0                   
+00000061  UCA0CTL1                   
+00000062  UCA0BR0                    
+00000063  UCA0BR1                    
+00000064  UCA0MCTL                   
+00000065  UCA0STAT                   
+00000066  UCA0RXBUF                  
+00000067  UCA0TXBUF                  
+00000068  UCB0CTL0                   
+00000069  UCB0CTL1                   
+0000006a  UCB0BR0                    
+0000006b  UCB0BR1                    
+0000006c  UCB0I2CIE                  
+0000006d  UCB0STAT                   
+0000006e  UCB0RXBUF                  
+0000006f  UCB0TXBUF                  
+00000118  UCB0I2COA                  
+0000011a  UCB0I2CSA                  
+0000011e  TA1IV                      
+00000120  WDTCTL                     
+00000128  FCTL1                      
+0000012a  FCTL2                      
+0000012c  FCTL3                      
+0000012e  TA0IV                      
+00000160  TA0CTL                     
+00000162  TA0CCTL0                   
+00000164  TA0CCTL1                   
+00000166  TA0CCTL2                   
+00000170  TA0R                       
+00000172  TA0CCR0                    
+00000174  TA0CCR1                    
+00000176  TA0CCR2                    
+00000180  TA1CTL                     
+00000182  TA1CCTL0                   
+00000184  TA1CCTL1                   
+00000186  TA1CCTL2                   
+00000190  TA1R                       
+00000192  TA1CCR0                    
+00000194  TA1CCR1                    
+00000196  TA1CCR2                    
+000001b0  ADC10CTL0                  
+000001b2  ADC10CTL1                  
+000001b4  ADC10MEM                   
+000001bc  ADC10SA                    
+00000200  threadList                 
+000002f4  callScheduler              
+000002f6  currThread                 
+000002f8  greenStarted               
+000002fa  iLEDonCount                
+000002fc  interrupts_disabled_count  
+000003b0  _stack                     
+00000400  __STACK_END                
+000010c0  TLV_CHECKSUM               
+000010da  TLV_ADC10_1_TAG            
+000010db  TLV_ADC10_1_LEN            
+000010f6  TLV_DCO_30_TAG             
+000010f7  TLV_DCO_30_LEN             
+000010f8  CALDCO_16MHZ               
+000010f9  CALBC1_16MHZ               
+000010fa  CALDCO_12MHZ               
+000010fb  CALBC1_12MHZ               
+000010fc  CALDCO_8MHZ                
+000010fd  CALBC1_8MHZ                
+000010fe  CALDCO_1MHZ                
+000010ff  CALBC1_1MHZ                
+0000c000  schedulerRunNextThread     
+0000c0ea  semaphoreLED_P             
+0000c178  schedulerStartThread       
+0000c1e4  semaphoreLED_V             
+0000c250  schedulerGetNextThreadToRun
+0000c2aa  _auto_init                 
+0000c302  _setjmp                    
+0000c302  setjmp                     
+0000c32e  longjmp                    
+0000c35a  blinkGreen                 
+0000c39e  process_button_press       
+0000c3dc  schedulerGetFreeThread     
+0000c412  redOnForTwoSeconds         
+0000c444  setupTimer                 
+0000c476  timer                      
+0000c4a4  setupScheduler             
+0000c4d0  setupSemaphoreLED          
+0000c4f4  schedulerSetThreadStatus   
+0000c512  main                       
+0000c52e  _c_int00_noargs_noexit     
+0000c548  setupButton                
+0000c562  schedulerKillThread        
+0000c57a  setupLEDs                  
+0000c592  __TI_zero_init             
+0000c5a6  __mspabi_mpyi              
+0000c5a6  __mspabi_mpyi_sw           
+0000c5ba  atomic_start               
+0000c5ca  __mspabi_func_epilog_7     
+0000c5cc  __mspabi_func_epilog_6     
+0000c5ce  __mspabi_func_epilog_5     
+0000c5d0  __mspabi_func_epilog_4     
+0000c5d2  __mspabi_func_epilog_3     
+0000c5d4  __mspabi_func_epilog_2     
+0000c5d6  __mspabi_func_epilog_1     
+0000c5da  atomic_end                 
+0000c5e4  __TI_ISR_TRAP              
+0000c5ea  schedulerGetCurrThread     
+0000c5f0  _system_pre_init           
+0000c5f4  C$$EXIT                    
+0000c5f4  abort                      
+0000c5fc  __TI_Handler_Table_Base    
+0000c5fe  __TI_CINIT_Base            
+0000c5fe  __TI_Handler_Table_Limit   
+0000c602  __TI_CINIT_Limit           
+0000ffe0  __TI_int00                 
+0000ffe4  __TI_int02                 
+0000ffe6  __TI_int03                 
+0000ffea  __TI_int05                 
+0000ffec  __TI_int06                 
+0000ffee  __TI_int07                 
+0000fff0  __TI_int08                 
+0000fff2  __TI_int09                 
+0000fff4  __TI_int10                 
+0000fff6  __TI_int11                 
+0000fff8  __TI_int12                 
+0000fffa  __TI_int13                 
+0000fffc  __TI_int14                 
+0000fffe  _reset_vector              
+ffffffff  __binit__                  
+ffffffff  __c_args__                 
+ffffffff  binit                      
+UNDEFED   __TI_INITARRAY_Base        
+UNDEFED   __TI_INITARRAY_Limit       
 
-[168 symbols]
+[170 symbols]
