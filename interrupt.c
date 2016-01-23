@@ -17,7 +17,6 @@
 
 int callScheduler;
 int iLEDonCount;
-int greenStarted;
 
 void setupButton (void) {
 
@@ -52,7 +51,7 @@ void setupTimer (void) {
 	// initialise your schedule timer
 	callScheduler = 0;
 	iLEDonCount = 0;
-	greenStarted = 0;
+
 }
 
 
@@ -78,12 +77,8 @@ __interrupt void process_button_press (void) {
 	// don't want to get interrupted
 	atomic_start ();
 
-	// the first time start a green
-	if (greenStarted == 0) {
-		schedulerStartThread (&blinkGreen);
-		greenStarted++;
-	} else
-		schedulerStartThread (&redOnForTwoSeconds);
+	// start a red thread
+	schedulerStartThread (&redOnForTwoSeconds);
 
 	// remove interrrupt flag so you can process the next one
 	BUTTON_IFG &= ~BUTTON;

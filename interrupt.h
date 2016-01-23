@@ -11,8 +11,6 @@
 // global vars
 extern int callScheduler;
 extern int iLEDonCount;
-extern int greenStarted;
-
 
 void setupButton ();
 void setupTimer ();

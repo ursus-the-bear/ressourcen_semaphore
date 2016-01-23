@@ -38,11 +38,6 @@ void atomic_end () {
 
 	interrupts_disabled_count--;
 
-//	if (interrupts_disabled_count < 0) {
-//		// basically you should never land here!!! you have disabled more than you have enabled!
-//		interrupts_disabled_count = 0;
-//	}
-
 	if (0 == interrupts_disabled_count)
 		__enable_interrupt();
 
@@ -123,8 +118,8 @@ int schedulerStartThread (void (*funcPtr)()) {
 	// this is where you land after the setjmp
 	threadList [threadID].funcPtr();		// basically run the function you are passing to it
 
-	// once you are finished you kann kill yourself
-	schedulerKillThread(threadID);			// once you get here you are finished so stop
+	// once you are finished you commit harikirri
+	schedulerKillThread(threadID);
 	return ERROR_THREAD;
 
 }
@@ -146,9 +141,16 @@ int schedulerGetNextThreadToRun () {
 
 		// now check that position
 		if (threadList [arrayPos].state == READY) {
-			i = MAX_THREADS;  // now you get the next free thread, give it back and start working!
 			atomic_end ();
 			return arrayPos;
+		}
+	}
+
+	// see if there is a ready thread
+	for (i = 0; i < MAX_THREADS; i++) {
+		if (threadList [arrayPos].state == RUNNING) {
+			atomic_end ();
+			return i;
 		}
 	}
 
@@ -156,10 +158,7 @@ int schedulerGetNextThreadToRun () {
 	atomic_end ();
 
 	// and return the first space you found
-	if (currThread == NO_THREAD)
-		return NO_THREAD;
-	else
-		return currThread;
+	return NO_THREAD;
 }
 // select the next thread to run and run it
 void schedulerRunNextThread() {
@@ -182,8 +181,8 @@ void schedulerRunNextThread() {
 		break ;
 	case RUNNING:
 		// just carry on with your running thread
-		atomic_end();
-		longjmp(threadList[currThread].context, 1);
+	//	atomic_end();
+	//	longjmp(threadList[currThread].context, 1);
 		break;
 	case READY:
 		if(currThread == -1) {

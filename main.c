@@ -15,6 +15,9 @@ int main (void) {
 	setupSemaphoreLED(&blinkGreen);
 	setupScheduler ();
 
+	// start our control thread
+	schedulerStartThread (&blinkGreen);
+
 	// ok, now enable the interrupts for everything to just magically start
 	__enable_interrupt();
 

@@ -43,33 +43,35 @@ void semaphoreLED_P () {
 	// check if the LED belongs to you
 	if (0 == semaphoreLED) {
 		// you are the first person to who wants the LED, just run with it
-	} else {
-		// set any greens to blocked
-		int i;
-		for (i = 0; i < semaphoreLED; i++) {
-			if (threadList [i].funcPtr == backgroundFunction)
-				schedulerSetThreadStatus (i, BLOCKED);		// set any green functions to blocked
-		}
-
-		// is the running one green
-		if (threadList [threadsWaiting [0]].funcPtr == backgroundFunction) {
-			// swap the one I am adding with the one at 0
-			int threadAtZero;
-			threadAtZero = threadsWaiting [0];
-			threadsWaiting [0] = runningThread;
-			threadsWaiting [semaphoreLED] = threadAtZero;
-		} else {
-			schedulerSetThreadStatus (runningThread, BLOCKED);
-		}
-
-		// NB -> We are going to run another thread because this one cannot run i.e. it is blocked
 		atomic_end();
-		schedulerRunNextThread();
-		return; // need this so I do not, by mistake, run atomic_end twice (from below)
+		return;
 	}
 
-	// finished
+	// if you get here then there is a queue now fixup everything
+	// set any greens to blocked
+	int i;
+	for (i = 0; i < semaphoreLED; i++) {
+		if (threadList [i].funcPtr == backgroundFunction)
+			schedulerSetThreadStatus (i, BLOCKED);		// set any green functions to blocked
+	}
+
+	// is the running one green
+	if (threadList [threadsWaiting [0]].funcPtr == backgroundFunction) {
+		// swap the one I am adding with the one at 0
+		int threadAtZero;
+		threadAtZero = threadsWaiting [0];
+		threadsWaiting [0] = runningThread;
+		threadsWaiting [semaphoreLED] = threadAtZero;
+		schedulerSetThreadStatus (threadsWaiting [0], RUNNING);		// set the 0 to running
+	} else {
+		schedulerSetThreadStatus (runningThread, BLOCKED);
+	}
+
+	// NB -> We are going to run another thread because this one cannot run i.e. it is blocked
 	atomic_end();
+	schedulerRunNextThread();
+	return; // need this so I do not, by mistake, run atomic_end twice (from below)
+
 }
 
 // V is for Vendetta????
